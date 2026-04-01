@@ -1,0 +1,18 @@
+{
+  "name": "colab-like-gpu-runtime",
+  "image": "us-docker.pkg.dev/colab-images/public/runtime",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "runArgs": [
+    "--gpus=all"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "forwardPorts": [8080, 9000],
+  "postCreateCommand": "python --version && nvidia-smi || true"
+}

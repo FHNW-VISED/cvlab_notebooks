@@ -1,0 +1,15 @@
+{
+    "name": "colab-like-runtime",
+    "image": "us-docker.pkg.dev/colab-images/public/cpu-runtime",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-python.python",
+          "ms-toolsai.jupyter"
+        ]
+      }
+    },
+    "forwardPorts": [8080, 9000],
+    "postCreateCommand": "python --version && pip list | head"
+}
