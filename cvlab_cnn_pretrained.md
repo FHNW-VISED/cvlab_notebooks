@@ -65,7 +65,7 @@
 | 52 | Markdown | Grad-CAM | Final discussion prompts (model focus, trust, limitations) |
 | 53 | Markdown | TensorBoard | Section 14 — hyperparameter tuning with TensorBoard |
 | 54 | Code | TensorBoard | Import `datetime`, `itertools`; define `RUNS_DIR` and `TUNING_GRID` |
-| 55 | Markdown | TensorBoard | Instructions for launching TensorBoard |
+| 55 | Markdown | TensorBoard | Instructions for launching TensorBoard; disclaimer that `%tensorboard` magic only works in Colab web — local users must download logs and use terminal command |
 | 56 | Code | TensorBoard | Tuning loop over `iter_experiments(TUNING_GRID)` |
 | 57 | Markdown | Reflection | Final reflection on hyperparameter impact |
 | 58 | Markdown | Wrap-up | Workshop learning objectives summary |
