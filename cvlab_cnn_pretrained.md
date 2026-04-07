@@ -22,20 +22,23 @@
 | 12 | Code | Transforms | ImageNet mean/std, `display_transform` and `model_transform` definitions |
 | 13 | Markdown | Dataset | How `ImageFolder` is loaded with both transform types |
 | 14 | Code | Dataset | Load `ImageFolder` for `full_train_display`, `full_train_dataset`, `benchmark_display`, `benchmark_dataset`; defines `class_names` |
-| 15 | Markdown | Inspection | Class balance section intro |
-| 16 | Code | Inspection | `Counter`-based class distribution analysis |
-| 17 | Code | Inspection | Bar plot of class balance |
-| 18 | Markdown | Checkpoint | Questions about class balance |
-| 19 | Markdown | Browser | Interactive widget intro |
-| 20 | Code | Browser | `show_example_grid` function; imports `ipywidgets`, `display` |
-| 21 | Code | Browser | `browse_dataset` function with `IntSlider`; calls `browse_dataset(full_train_display, class_names)` |
+| 15 | Markdown | Inspection | "### 5.1 Single image" intro + 2 questions about tensor shape and pixel value range |
+| 16 | Code | Inspection | Load `full_train_display[0]` and `full_train_model[0]`; print shapes; side-by-side `plt.imshow` of display vs normalized tensor |
+| 17 | Markdown | Inspection | Class balance section intro |
+| 18 | Code | Inspection | `Counter`-based class distribution analysis |
+| 19 | Code | Inspection | Bar plot of class balance |
+| 20 | Markdown | Checkpoint | Questions about class balance |
+| 21 | Markdown | Browser | Interactive widget intro |
+| 22 | Code | Browser | `show_example_grid` function; imports `ipywidgets`, `display` |
+| 23 | Code | Browser | `browse_dataset` function with `IntSlider`; calls `browse_dataset(full_train_display, class_names)` |
 | 22 | Markdown | Your Turn | Discussion of image variations |
 | 23 | Markdown | Sanity | Checks before training section |
 | 24 | Code | Sanity | Print batch shape and labels; run dataloader iteration |
 | 25 | Code | Sanity | `denormalize` function; visualize a denormalized batch |
 | 26 | Markdown | Model | Pretrained backbone options explanation |
 | 27 | Code | Model | `build_model(model_name, num_classes, dropout, freeze_backbone, unfreeze_last_block)` supporting `mobilenet_v2`, `resnet50`, `vit_b_16`; instantiates `model` |
-| 28 | Markdown | Checkpoint | Questions about freezing backbone and dropout |
+| 28 | Markdown | Model | ASCII diagram + prose explaining backbone (frozen feature extractor) vs classifier head (trained Linear layer); note on freezing and `UNFREEZE_LAST_BLOCK` |
+| 29 | Markdown | Checkpoint | Questions about freezing backbone and dropout |
 | 29 | Code | Sanity | Forward pass sanity check with `torch.no_grad()` |
 | 30 | Markdown | Training | Training utilities section intro |
 | 31 | Code | Training | Import `tqdm`, `sklearn.metrics` (`confusion_matrix`, `precision_score`, `recall_score`, `f1_score`) |
