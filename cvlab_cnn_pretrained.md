@@ -14,7 +14,7 @@
 | 4 | Code | Setup | `pip install gitpython grad-cam ipywidgets tensorboard` (optional) |
 | 5 | Code | Imports | `Path`, `matplotlib`, `numpy`, `pandas`, `torch`, `torchvision` models (MobileNetV2, ResNet50, ViT-B/16), `SummaryWriter`; sets `device` |
 | 6 | Markdown | Control Panel | Instructions for editing baseline parameters + "re-run from here" note |
-| 7 | Code | Control Panel | `IMG_SIZE`, `BATCH_SIZE`, `MODEL_NAME`, `SEED`, `SHOW_DATASET_EXAMPLES`, `EPOCHS`, `LR`, `DROPOUT`, `FREEZE_BACKBONE`, `UNFREEZE_LAST_BLOCK` |
+| 7 | Code | Control Panel | `IMG_SIZE`, `BATCH_SIZE`, `MODEL_NAME`, `SEED`, `SHOW_DATASET_EXAMPLES`, `EPOCHS`, `LR`, `DROPOUT`, `FREEZE_BACKBONE`, `UNFREEZE_LAST_BLOCK`, `USE_INTERACTIVE`, `MOUNT_DRIVE` |
 | 8 | Markdown | Checkpoint | Questions about expected settings impact |
 | 9 | Markdown | Data | Instructions and expected dataset folder structure |
 | 10 | Code | Data | Git repo setup and `DATA_PATH` / `BENCHMARK_PATH` configuration |
