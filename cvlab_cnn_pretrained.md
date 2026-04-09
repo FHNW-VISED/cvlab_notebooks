@@ -43,7 +43,8 @@
 | 30 | Markdown | Training | Training utilities section intro |
 | 31 | Code | Training | Import `tqdm`, `sklearn.metrics` (`confusion_matrix`, `precision_score`, `recall_score`, `f1_score`) |
 | 32 | Markdown | Training | Transfer learning expected behaviour description |
-| 33 | Code | Training | `CrossEntropyLoss`, `Adam` optimizer; `train_one_epoch` and `evaluate` helpers; training loop; stores `history` |
+| 33 | Code | Training | Quick experiment config cell: `EXP_EPOCHS`, `EXP_LR`, `EXP_AUGMENTATION`, `EXP_FREEZE_BACKBONE`, `EXP_MODEL_NAME`; rebuilds only changed components (transforms/loaders/model) into `_exp_*` variables |
+| 34 | Code | Training | `CrossEntropyLoss`, `Adam` optimizer; calls `fit(_exp_model, _exp_train_loader, ...)` using experiment config; stores `history` |
 | 34 | Code | Training | `plot_history(history)` call to visualize learning curves |
 | 35 | Markdown | Reflection | Blue "Reflection prompt" on learning curves, overfitting signs, and next steps |
 | 36 | Markdown | Evaluation | Validation and benchmark sets explanation |
@@ -84,7 +85,8 @@
 | `UNFREEZE_LAST_BLOCK` | 7 | Fine-tune last backbone block |
 | `benchmark_display` | 14 | Benchmark set with display transforms |
 | `benchmark_dataset` | 14 | Benchmark set with model transforms |
-| `model` | 27 | Instantiated pretrained model |
+| `model` | 27 | Instantiated pretrained model (baseline) |
+| `EXP_MODEL_NAME` / `EXP_*` | 33 | Per-experiment overrides; rebuild only changed parts into `_exp_*` vars |
 | `target_layer` | 50 | Layer used for Grad-CAM hooks |
 
 ---
