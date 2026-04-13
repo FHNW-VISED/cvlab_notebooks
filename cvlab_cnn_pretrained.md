@@ -21,7 +21,7 @@
 | 11 | Markdown | Transforms | Explanation of display vs model transform pipelines |
 | 12 | Code | Transforms | ImageNet mean/std, `display_transform` and `model_transform` definitions |
 | 13 | Markdown | Dataset | How `ImageFolder` is loaded with both transform types |
-| 14 | Code | Dataset | Load `ImageFolder` for `full_train_display`, `full_train_dataset`, `benchmark_display`, `benchmark_dataset`; defines `class_names` |
+| 14 | Code | Dataset | Load `ImageFolder` for `full_train_display`, `full_train_model`, `full_train_eval`, `benchmark_display`, `benchmark_model`; defines `class_names`; person-aware split via `Subset` using `train_idx`/`val_idx` — same person cannot appear in both sets; builds `train_loader`, `val_loader`, `benchmark_loader` |
 | 15 | Markdown | Inspection | "### 5.1 Single image" intro + 2 questions about tensor shape and pixel value range |
 | 16 | Code | Inspection | Load `full_train_display[0]` and `full_train_model[0]`; print shapes; side-by-side `plt.imshow` of display vs normalized tensor |
 | 17 | Markdown | Inspection | Class balance section intro |

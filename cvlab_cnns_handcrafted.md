@@ -16,7 +16,7 @@
 | 6 | Code | 1. Control Panel | `SEED`, `IMG_SIZE`, `N_IMAGES_PER_CLASS`, `BATCH_SIZE`, `VAL_FRACTION`, `EPOCHS`, `LEARNING_RATE`, `NUM_CHANNELS`, `DROPOUT_RATIO`, `USE_BATCHNORM`, `MOUNT_DRIVE`, `USE_INTERACTIVE`, `RANDOM_EXAMPLE_INDEX`, `DATA_PATH` |
 | 7 | Code | 1. Control Panel | Drive mount: `if IN_COLAB and MOUNT_DRIVE: drive.mount(...)` |
 | 8 | Markdown | 2. Data | Dataset folder structure; explanation of why benchmark stays untouched; blue "Think before you run" prompt |
-| 9 | Code | 2. Data | Idempotent git clone (only clones if `FACES_PATH` does not exist); defines `FEMALE_PATH`, `MALE_PATH`, `BENCHMARK_PATH` |
+| 9 | Code | 2. Data | Defines `FACES_PATH`, `FEMALE_PATH`, `MALE_PATH`, `BENCHMARK_PATH`; `FORCE_RECLONE` flag (default `False`) — set `True` to delete and re-clone; idempotent git clone otherwise |
 | 10 | Markdown | 2.1 Explore | Folder inspection rationale; blue "Your Turn" with class-balance and image-quality questions |
 | 11 | Code | 2.1 Explore | `count_jpgs_in_directory` function; prints class counts |
 | 12 | Code | 2.1 Explore | `scroll_face_images` with ipywidgets slider; call guarded by `USE_INTERACTIVE` |
@@ -29,7 +29,7 @@
 | 19 | Code | 4.1 Inspect | `show_img` + `show_label`; call guarded by `USE_INTERACTIVE` |
 | 20 | Code | 4.1 Inspect | Class distribution bar plot |
 | 21 | Markdown | 5. Split | Train/val split explanation; `stratify=y`; blue "Your Turn" on `VAL_FRACTION` extremes |
-| 22 | Code | 5. Split | Shuffle + `train_test_split` using `VAL_FRACTION` and `SEED` from control panel |
+| 22 | Code | 5. Split | Person-aware split: groups images by person identity (filename stem minus trailing `_NNNN`), splits unique persons per class into train/val at `VAL_FRACTION`, then collects image indices — same person cannot appear in both sets |
 | 23 | Markdown | 6. Dataset | "Dataset vs DataLoader" explanation with ASCII diagram; `pin_memory` note |
 | 24 | Code | 6. Dataset | `NumpyClassificationDataset(Dataset)` class; creates `train_dataset`, `val_dataset`, `train_loader`, `val_loader` (using `BATCH_SIZE`) |
 | 25 | Code | 6. Dataset | Sanity check — batch shape and label print using `train_loader` |
