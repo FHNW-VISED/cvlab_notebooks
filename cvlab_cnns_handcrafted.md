@@ -10,7 +10,8 @@
 | --- | ------ | --------- | --------- |
 | 1 | Markdown | Title | Workshop title and intro to building a small CNN |
 | 2 | Markdown | 0. Setup | Package install instructions with package-group table; blue checkpoint question |
-| 3 | Code | 0. Setup | `pip install gitpython opencv-python grad-cam tqdm pandas` |
+| 3 | Markdown | How to use | "Predict → Run → Reflect" boxed instruction — shown to participants after roadmap |
+| 4 | Code | 0. Setup | `pip install gitpython opencv-python grad-cam tqdm pandas` |
 | 4 | Code | 0. Setup | Imports: `json`, `random`, `shutil`, `Path`, `cv2`, `matplotlib`, `numpy`, `pandas`, `torch`, `sklearn`, `tqdm`, `ipywidgets`, etc.; IN_COLAB detection; device |
 | 5 | Markdown | 1. Control Panel | Control panel explanation; blue "predict first" prompt before running |
 | 6 | Code | 1. Control Panel | `SEED`, `IMG_SIZE`, `N_IMAGES_PER_CLASS`, `BATCH_SIZE`, `VAL_FRACTION`, `EPOCHS`, `LEARNING_RATE`, `NUM_CHANNELS`, `DROPOUT_RATIO`, `USE_BATCHNORM`, `MOUNT_DRIVE`, `USE_INTERACTIVE`, `RANDOM_EXAMPLE_INDEX`, `DATA_PATH` |

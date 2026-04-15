@@ -10,7 +10,9 @@
 | --- | ------ | --------- | --------- |
 | 1 | Markdown | Title | Workshop title and introduction to Transfer Learning for Face Image Classification |
 | 2 | Markdown | Roadmap | Part A (Core lab) and Part B (Extensions) overview |
-| 3 | Markdown | Setup | Required packages instructions |
+| 3 | Markdown | How to use | "Predict → Run → Reflect" boxed instruction — shown to participants after roadmap |
+| 4 | Markdown | Banner | 🎙️ Instructor banner before §0 Setup |
+| 5 | Markdown | Setup | Required packages instructions |
 | 4 | Code | Setup | `pip install gitpython grad-cam ipywidgets tensorboard` (optional) |
 | 5 | Code | Imports | `Path`, `matplotlib`, `numpy`, `pandas`, `torch`, `torchvision` models (MobileNetV2, ResNet50, ViT-B/16), `SummaryWriter`; sets `device` |
 | 6 | Markdown | Control Panel | Instructions for editing baseline parameters + "re-run from here" note |
