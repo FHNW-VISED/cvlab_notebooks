@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How AI Sees? — Workshop</title>
+  <style>
+    :root {
+      --bg: #0d0d0f;
+      --surface: #16161a;
+      --border: #2a2a32;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --text: #e8e8f0;
+      --muted: #888899;
+      --card: #1c1c23;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, #2d1b6933 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 110%, #ff658422 0%, transparent 60%),
+        var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(108,99,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,99,255,.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: .85rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: 1.05;
+      background: linear-gradient(135deg, #fff 30%, #a09cff 70%, #ff6584 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-sub {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 2.8rem;
+    }
+
+    .info-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      justify-content: center;
+      margin-bottom: 2.8rem;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: .45rem 1.1rem;
+      font-size: .95rem;
+    }
+
+    .pill .icon { font-size: 1rem; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      padding: .8rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: opacity .15s, transform .15s;
+    }
+    .btn:hover { opacity: .88; transform: translateY(-1px); text-decoration: none; }
+    .btn.secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: .9rem; justify-content: center; }
+
+    /* ── Section shell ── */
+    section { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+
+    h2 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      letter-spacing: -.01em;
+    }
+
+    h2 span {
+      color: var(--accent);
+    }
+
+    /* ── Divider ── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── Schedule ── */
+    .schedule-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .sched-item {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 1rem;
+      align-items: start;
+      padding: 1.1rem 1.4rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .sched-time {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--accent);
+      padding-top: .1rem;
+    }
+
+    .sched-label { font-weight: 600; margin-bottom: .2rem; }
+    .sched-note { font-size: .9rem; color: var(--muted); }
+
+    /* ── Notebooks ── */
+    .notebook-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+
+    .notebook-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: border-color .15s, transform .15s;
+    }
+
+    .notebook-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    .nb-tag {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: .7rem;
+    }
+
+    .nb-title { font-weight: 700; font-size: 1.05rem; margin-bottom: .5rem; }
+    .nb-desc { font-size: .9rem; color: var(--muted); flex: 1; margin-bottom: 1.2rem; }
+
+    .nb-links { display: flex; gap: .7rem; flex-wrap: wrap; }
+
+    .nb-link {
+      font-size: .82rem;
+      font-weight: 600;
+      padding: .3rem .8rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      color: var(--text);
+      transition: background .12s;
+    }
+    .nb-link:hover { background: var(--border); text-decoration: none; }
+    .nb-link.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .nb-link.primary:hover { background: #5a52e0; }
+
+    /* ── Materials ── */
+    .materials-list {
+      display: grid;
+      gap: .8rem;
+    }
+
+    .mat-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.4rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .mat-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .mat-body { flex: 1; }
+    .mat-name { font-weight: 600; margin-bottom: .15rem; }
+    .mat-desc { font-size: .88rem; color: var(--muted); }
+
+    /* ── Location ── */
+    .location-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .location-card { grid-template-columns: 1fr; }
+      .sched-item { grid-template-columns: 1fr; }
+      .sched-time { padding-top: 0; }
+    }
+
+    .loc-field label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .35rem;
+    }
+
+    .loc-field p { font-size: 1.05rem; font-weight: 500; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+      font-size: .88rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<div class="hero">
+  <p class="hero-eyebrow">FHNW · SDS Workshop · CVLab</p>
+  <h1>How AI Sees?</h1>
+  <p class="hero-sub">
+    A hands-on workshop exploring how convolutional neural networks perceive images —
+    from handcrafted filters to pretrained deep models.
+  </p>
+
+  <div class="info-pills">
+    <div class="pill"><span class="icon">📅</span> <span>DATE TBD</span></div>
+    <div class="pill"><span class="icon">🕐</span> <span>TIME TBD</span></div>
+    <div class="pill"><span class="icon">📍</span> <span>ROOM TBD</span></div>
+    <div class="pill"><span class="icon">⏱</span> <span>~3 hours</span></div>
+  </div>
+
+  <div class="hero-ctas">
+    <a class="btn" href="#notebooks">Open Notebooks ↓</a>
+    <a class="btn secondary" href="#schedule">See Schedule ↓</a>
+  </div>
+</div>
+
+<!-- ══════════════════════ ABOUT ══════════════════════ -->
+<section>
+  <h2>About the <span>Workshop</span></h2>
+  <p style="color:var(--muted); max-width:680px;">
+    In this workshop we ask a deceptively simple question: <em>how does AI actually "see" an image?</em>
+    Through two interactive Jupyter notebooks you'll experiment with pretrained CNNs (fast, strong results)
+    and build your own CNN from scratch — comparing results, visualizing what the network focuses on
+    with Grad-CAM, and developing an intuition for what's happening inside these models.
+  </p>
+  <br />
+  <p style="color:var(--muted); max-width:680px;">
+    No deep learning background required. Bring curiosity and a laptop.
+  </p>
+</section>
+
+<hr />
+
+<!-- ══════════════════════ LOGISTICS ══════════════════════ -->
+<section>
+  <h2>Date, Time &amp; <span>Location</span></h2>
+  <div class="location-card">
+    <div class="loc-field">
+      <label>Date</label>
+      <p>TBD</p>
+    </div>
+    <div class="loc-field">
+      <label>Time</label>
+      <p>TBD</p>
+    </div>
+    <div class="loc-field">
+      <label>Room / Building</label>
+      <p>TBD</p>
+    </div>
+    <div class="loc-field">
+      <label>Institution</label>
+      <p>FHNW — SDS Workshop</p>
+    </div>
+  </div>
+</section>
+
+<hr />
+
+<!-- ══════════════════════ SCHEDULE ══════════════════════ -->
+<section id="schedule">
+  <h2>Workshop <span>Schedule</span></h2>
+  <div class="schedule-grid">
+    <div class="sched-item">
+      <div class="sched-time">0:00 – 0:15</div>
+      <div>
+        <div class="sched-label">Welcome &amp; Setup</div>
+        <div class="sched-note">Intro, environment check, goals of the day</div>
+      </div>
+    </div>
+    <div class="sched-item">
+      <div class="sched-time">0:15 – 1:15</div>
+      <div>
+        <div class="sched-label">Notebook 1 — Pretrained CNN</div>
+        <div class="sched-note">Transfer learning, fine-tuning, Grad-CAM visualization</div>
+      </div>
+    </div>
+    <div class="sched-item">
+      <div class="sched-time">1:15 – 1:30</div>
+      <div>
+        <div class="sched-label">Break</div>
+        <div class="sched-note">Coffee &amp; questions</div>
+      </div>
+    </div>
+    <div class="sched-item">
+      <div class="sched-time">1:30 – 2:30</div>
+      <div>
+        <div class="sched-label">Notebook 2 — Handcrafted CNN</div>
+        <div class="sched-note">Build a CNN from scratch, compare to pretrained results</div>
+      </div>
+    </div>
+    <div class="sched-item">
+      <div class="sched-time">2:30 – 3:00</div>
+      <div>
+        <div class="sched-label">Debrief &amp; Discussion</div>
+        <div class="sched-note">Takeaways, open questions, further resources</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr />
+
+<!-- ══════════════════════ NOTEBOOKS ══════════════════════ -->
+<section id="notebooks">
+  <h2>Interactive <span>Notebooks</span></h2>
+  <div class="notebook-grid" style="grid-template-columns: 1fr; max-width: 540px;">
+
+    <div class="notebook-card">
+      <div class="nb-tag">Notebook</div>
+      <div class="nb-title">How AI Sees? — Hands-on CNN</div>
+      <div class="nb-desc">
+        Experiment with pretrained and handcrafted convolutional networks, train on real image data,
+        and visualize what the model is looking at with Grad-CAM.
+      </div>
+      <div class="nb-links">
+        <a class="nb-link primary" href="#" target="_blank">Open in Colab</a>
+        <a class="nb-link" href="#" target="_blank">Download .ipynb</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr />
+
+<!-- ══════════════════════ MATERIALS ══════════════════════ -->
+<section id="materials">
+  <h2>Additional <span>Materials</span></h2>
+  <div class="materials-list">
+
+    <div class="mat-item">
+      <div class="mat-icon">📦</div>
+      <div class="mat-body">
+        <div class="mat-name">Environment Setup</div>
+        <div class="mat-desc">Python dependencies via <code>uv</code> — CPU and GPU variants available</div>
+      </div>
+      <a class="nb-link" href="requirements_no_gpu.txt" target="_blank">requirements (CPU)</a>
+    </div>
+
+    <div class="mat-item">
+      <div class="mat-icon">🖼</div>
+      <div class="mat-body">
+        <div class="mat-name">CNN Architecture Diagram</div>
+        <div class="mat-desc">Visual overview of a typical CNN pipeline</div>
+      </div>
+      <a class="nb-link" href="typical_cnn.png" target="_blank">View</a>
+    </div>
+
+    <div class="mat-item">
+      <div class="mat-icon">📄</div>
+      <div class="mat-body">
+        <div class="mat-name">Slides</div>
+        <div class="mat-desc">Intro presentation — add link when available</div>
+      </div>
+      <a class="nb-link" href="#" target="_blank">Coming soon</a>
+    </div>
+
+    <div class="mat-item">
+      <div class="mat-icon">🔗</div>
+      <div class="mat-body">
+        <div class="mat-name">Further Reading</div>
+        <div class="mat-desc">Curated papers and blog posts on CNNs and computer vision — add links here</div>
+      </div>
+      <a class="nb-link" href="#" target="_blank">Coming soon</a>
+    </div>
+
+  </div>
+</section>
+
+<hr />
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
+  <p>
+    "How AI Sees?" Workshop &nbsp;·&nbsp; FHNW SDS &nbsp;·&nbsp; CVLab
+    &nbsp;·&nbsp; <a href="mailto:">Contact organiser</a>
+  </p>
+</footer>
+
+</body>
+</html>
