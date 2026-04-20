@@ -1,0 +1,258 @@
+# Workshop Simulation Feedback Summary
+
+## Overall signal
+
+Most feedback clusters around **five recurring needs**:
+
+1. **Simplify and structure the flow more clearly**
+2. **Make it more interactive, earlier**
+3. **Adapt difficulty better for mixed backgrounds**
+4. **Use more and better visuals**
+5. **Reduce confusion around metrics/evaluation and fix notebook issues**
+
+---
+
+## What came up most often
+
+### 1) Structure and learning flow — **very frequent**
+**Appears most often across notes and survey comments.**
+
+Main points:
+- The workshop needs a **clearer storyline**: what is being done, why, what to expect, and what to observe.
+- Add **explicit learning objectives** overall and per section.
+- Reduce the feeling of **switching between too many concepts**.
+- Focus on **2–3 main takeaways** people should leave with.
+- Improve transitions between parts and notebooks.
+- Add a better intro agenda and a stronger wrap-up.
+- Remove the option to use Colab locally, make all people use Colab on the web.
+
+Grouped feedback:
+- Add an overall goal: “At the end of this hands-on session you will be able to…”
+- Have clear learning objectives for sections
+- More clear cause-effect structure: task -> explanation -> expectation -> result -> reflection
+- Make more links between the two parts
+- Better notebook order / reconsider notebook order
+- Add agenda / workshop objectives / wrap-up discussion
+- Put questions inside sections so it is clear where they belong
+- Section questions should be more precise
+
+**Estimate:** ~12–15 mentions
+
+---
+
+### 2) More hands-on time, earlier participation, less repetition — **very frequent**
+**Second strongest theme.**
+
+Main points:
+- Participants should **start doing things earlier**.
+- There is **too much explanation at the start** and **too much repetition**.
+- Show something first, then let people explore it.
+- Let people play around more while you guide the focus.
+
+Grouped feedback:
+- First participant time should come sooner
+- First pause should come earlier
+- Too many repetitions
+- Long explanations, few things to do
+- Sometimes show first, then let them play around
+- Make it much more interactive
+- Try code changes together with the audience
+- Consider interactive elements with other participants
+- Be mindful that people switch attention between beamer and laptop
+
+**Estimate:** ~9–11 mentions
+
+---
+
+### 3) Difficulty level is uneven; label tasks by level — **very frequent**
+Main points:
+- The material jumps between **too easy and too advanced**.
+- Beginners can get lost.
+- Tasks and questions should be **labeled by level**.
+- A workshop for mixed backgrounds should probably bias toward **mostly medium difficulty**, with optional advanced paths.
+
+Grouped feedback:
+- Add beginner / intermediate / advanced questions
+- Mention at the start that there are questions at different levels
+- Use mostly medium-level questions overall
+- Mark parameter tuning as advanced
+- Some current questions are too difficult for beginners
+- Simpler questions would work better than some detailed ones
+- Hand-crafted CNN part may be too hard without ML background
+
+**Estimate:** ~8–10 mentions
+
+---
+
+### 4) More visuals and earlier visuals — **very frequent**
+Main points:
+- Visual explanations would help a lot, especially for beginners.
+- Some concepts should be shown visually before code or theory gets deeper.
+
+Grouped feedback:
+- More visuals
+- Add visuals for backbone / classifier head
+- Introduce train/val/test split visually
+- Simplify and move transfer learning visual upward
+- Add intro on tensors, channels, image representation
+- Show image-processing intuition early (RGB, arrays, channels, rotation, masking, convolution GIF)
+- GIF / kernel-over-image idea
+- Keep visual style and colors consistent
+
+**Estimate:** ~8–10 mentions
+
+---
+
+### 5) Metrics / evaluation / benchmark section is confusing — **frequent**
+Main points:
+- Too many metrics are shown.
+- Benchmark/train/validation distinctions were confusing.
+- The evaluation section may need simplification.
+
+Grouped feedback:
+- Explain training / validation / benchmark better, or remove benchmark evaluation
+- Maybe only keep accuracy metrics
+- Many metrics plotted; maybe skip some
+- If using metrics, show simpler example visualizations
+- “plot metrics” vs `plot_history` naming mismatch
+- Clarify logits vs probabilities
+- Make interpretation of results easier
+- Focus more on correctly vs incorrectly classified images
+
+**Estimate:** ~7–8 mentions
+
+---
+
+## Strong medium-frequency themes
+
+### 6) Notebook design: likely merge or simplify notebooks — **frequent**
+Main points:
+- There is repeated doubt about whether **two notebooks are necessary**.
+- Several comments point toward **one notebook** or one primary notebook with optional extensions.
+
+Grouped feedback:
+- Maybe a single notebook
+- Merge both notebooks
+- Integrate hand-crafted notebook into the first
+- Use same data organization for both notebooks
+- Focus on features rather than splitting into two notebooks
+- If both remain, make the relation between them clearer
+
+**Estimate:** ~6–8 mentions
+
+---
+
+### 7) Technical fixes and setup issues — **frequent**
+Main points:
+- A few concrete bugs/setup issues should be fixed before the next run.
+
+Grouped feedback:
+- `epoch = 1`: plot does not work (Chapter 9)
+- `FORCE_RECLONE = True` by default
+- Add `RUN_ALL` option
+- Model is not rebuilt / training continues from previous weights
+- Grid search expects 224x224 images
+- One participant got image-size error with `IMAGE_SIZE = 144`
+- Save a copy in Google Drive
+- Consider Colab Pro / stronger instructor runtime
+- Possibly move data to FHNW-VISED / use `gdown`
+
+**Estimate:** ~8 concrete technical points
+
+---
+
+### 8) Beginner framing and conceptual grounding — **frequent**
+Main points:
+- Beginners need more intuition before detailed ML choices.
+- Some concepts should be introduced more gently and earlier.
+
+Grouped feedback:
+- Explain parameters more simply
+- Introduce backbone / classifier conceptually earlier
+- Explain dataset preparation better
+- Use simpler questions around image size / channels
+- Augmentation may be too advanced for beginners
+- Imbalance may get too much focus
+- Technical terms need support (e.g. glossary / side screen)
+
+**Estimate:** ~6–8 mentions
+
+---
+
+## Lower-frequency but useful ideas
+
+### 9) Focus the content more tightly
+- Put TensorBoard earlier
+- Grad-CAM could be used more actively: search for patterns
+- Grad-CAM and wrongly classified vs correctly classified images were seen as strong teaching material
+- Tuning could use subset size as a simpler play variable
+- Unfreezing transfer learning could be a good interactive concept
+- Reference game / Susanne’s explanations were appreciated and could be reused
+
+### 10) Logistics / facilitation
+- Official break timing matters
+- A landing page could help
+- Beginners sitting together might help support
+- Save/share materials more smoothly
+
+---
+
+## Positive feedback to keep
+
+These points were explicitly appreciated:
+- The **hands-on format** is valuable
+- Letting participants **change parameters and run code** works well
+- The workshop gives **good insight into models and parameter comparison**
+- The **notebooks are generally well organized**
+- **Transfer learning explanation** was considered helpful
+- **Grad-CAM results** were seen as impressive
+- **Font size/readability** was good
+- Google Colab as environment was appreciated
+
+---
+
+## Priority actions for the next version
+
+### Highest priority
+1. **Rebuild the workshop around one clear flow**
+   - clear intro, goals, section objectives, wrap-up
+   - reduce topic switching
+   - define 2–3 main learning outcomes
+
+2. **Make people interact earlier**
+   - first action sooner
+   - less front-loaded explanation
+   - more guided experimentation
+
+3. **Separate difficulty levels**
+   - label tasks/questions as beginner, intermediate, advanced
+   - keep the default path mostly beginner-to-medium
+   - make advanced parts optional
+
+4. **Simplify evaluation**
+   - reduce number of metrics
+   - clarify train / validation / benchmark
+   - consider keeping only the most useful metrics
+
+5. **Fix technical issues before the next run**
+   - reset model between runs
+   - fix plotting/image-size/grid-search issues
+   - set sensible defaults (`FORCE_RECLONE`, maybe `RUN_ALL`)
+
+### Next priority
+6. **Decide notebook strategy**
+   - ideally merge into one notebook, or
+   - keep one main notebook and one optional advanced extension
+
+7. **Add more visual intuition**
+   - train/val/test split
+   - backbone vs classifier
+   - tensors/channels/images
+   - transfer learning visual earlier
+   - simple convolution/kernel animation
+
+---
+
+## Suggested interpretation in one sentence
+
+The core workshop idea is strong, but the next version should be **simpler, more visual, more hands-on from the start, and more intentionally split by skill level**, with fewer metrics and cleaner notebook mechanics.
