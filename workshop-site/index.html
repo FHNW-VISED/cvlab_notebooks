@@ -175,6 +175,45 @@
     .sched-label { font-weight: 600; margin-bottom: .2rem; }
     .sched-note { font-size: .9rem; color: var(--muted); }
 
+    /* ── Leaderboard ── */
+    .leaderboard-meta {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      font-size: .95rem;
+    }
+
+    .leaderboard-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+      padding: .85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: .92rem;
+    }
+
+    .leaderboard-table th {
+      color: var(--muted);
+      font-size: .75rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .leaderboard-table tr:last-child td { border-bottom: 0; }
+    .leaderboard-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+
     /* ── Notebooks ── */
     .notebook-grid {
       display: grid;
@@ -303,6 +342,7 @@
 
   <div class="hero-ctas">
     <a class="btn" href="#notebooks">Open Notebooks ↓</a>
+    <a class="btn secondary" href="#leaderboard">Leaderboard ↓</a>
     <a class="btn secondary" href="#schedule">See Schedule ↓</a>
   </div>
 </div>
@@ -393,6 +433,31 @@
 
 <hr />
 
+<!-- ══════════════════════ LEADERBOARD ══════════════════════ -->
+<section id="leaderboard">
+  <h2>Workshop <span>Leaderboard</span></h2>
+  <p class="leaderboard-meta" id="leaderboard-meta">Loading ranking…</p>
+  <div class="leaderboard-table-wrap">
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Model</th>
+          <th class="num">Benchmark Acc</th>
+          <th class="num">Benchmark F1</th>
+          <th>Saved</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <tr><td colspan="6">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr />
+
 <!-- ══════════════════════ NOTEBOOKS ══════════════════════ -->
 <section id="notebooks">
   <h2>Interactive <span>Notebooks</span></h2>
@@ -469,6 +534,64 @@
     &nbsp;·&nbsp; <a href="mailto:">Contact organiser</a>
   </p>
 </footer>
+
+<script>
+  const numberFormat = new Intl.NumberFormat(undefined, {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4
+  });
+
+  function escapeHtml(value) {
+    return String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  function score(value) {
+    const num = Number(value);
+    return Number.isFinite(num) ? numberFormat.format(num) : '–';
+  }
+
+  async function loadLeaderboard() {
+    const meta = document.getElementById('leaderboard-meta');
+    const body = document.getElementById('leaderboard-body');
+    try {
+      const response = await fetch('leaderboard.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      const entries = Array.isArray(data.entries) ? data.entries : [];
+      meta.textContent = `Top ${data.top_n_per_person ?? 3} models per participant · updated ${data.updated_at ?? 'not yet'}`;
+
+      if (!entries.length) {
+        body.innerHTML = '<tr><td colspan="6">No submissions yet. Train a model in the notebook and submit your run.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = entries.map((entry, index) => {
+        const rank = entry.rank ?? index + 1;
+        const benchAcc = entry.bench_acc ?? entry['Benchmark Acc'];
+        const benchF1 = entry.bench_f1 ?? entry['Benchmark F1'];
+        return `
+          <tr>
+            <td>${escapeHtml(rank)}</td>
+            <td>${escapeHtml(entry.participant)}</td>
+            <td>${escapeHtml(entry.model)}</td>
+            <td class="num">${score(benchAcc)}</td>
+            <td class="num">${score(benchF1)}</td>
+            <td>${escapeHtml(entry.saved_at ?? entry['Saved at'] ?? '')}</td>
+          </tr>`;
+      }).join('');
+    } catch (error) {
+      meta.textContent = 'Leaderboard could not be loaded yet.';
+      body.innerHTML = `<tr><td colspan="6">${escapeHtml(error.message)}</td></tr>`;
+    }
+  }
+
+  loadLeaderboard();
+</script>
 
 </body>
 </html>

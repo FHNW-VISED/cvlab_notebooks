@@ -153,134 +153,347 @@
 
 ## Questions by Difficulty
 
+> **How to read these:**
+> - Every question has a `🔍 Find it:` line — a one-liner you can run in a new cell, or the exact variable/cell to look at.
+> - 🟢 questions are answered by running a cell and reading output. No writing required.
+> - 🟡 questions need you to change **one value** and re-run. The change is always shown explicitly.
+> - 🔴 questions need a small code snippet or multi-parameter experiment. Template code is provided.
+
+---
+
 ### 🟢 Beginner — run, observe, answer
 
-These questions have **concrete, visible answers** — run the cell and look at what appears.
+**Part 1 · Cell 09 — First look at the data**
 
-**Cell 08 — First look at the data**
-- Do all images have the same size and framing?
-- Can you spot any image that looks noisy or unusual? What might cause that?
-- Before training anything: if you had to guess by eye, which class looks harder to classify and why?
+Q1. Do both classes have the same number of images in the widget?  
+🔍 Find it: scroll the widget — notice the label shown. Or run: `print(Counter(labels))` right after cell 09 executes (Counter is already imported).
 
-**Cell 10 — What is an image?**
-- What are the three numbers printed for one pixel? What do they represent?
-- Which channel looks brightest in skin regions — Red, Green, or Blue?
-- If you set all Blue channel values to 0, what colour shift would you expect?
+Q2. Can you spot an image that looks noisy, blurry, or oddly framed?  
+🔍 Find it: scroll slowly through both classes. Write down the index of one unusual image. What might cause it?
 
-**Cell 12 — Data splits**
-- Why can't we use the benchmark set to decide when to stop training?
-- What would go wrong if the same person appeared in both train and validation?
-- The split keeps people in one set only ("person-aware"). Why is that important here?
-
-**Cell 18 — What does a batch look like?**
-- Count the images in the grid. Does it match BATCH_SIZE?
-- Are the images already resized to the same shape? Why does the model require this?
-
-**Cell 20 — How much data do you need?**
-- Set `N_IMAGES_PER_CLASS = 50`, train, note the benchmark accuracy. Then try `N_IMAGES_PER_CLASS = 500`. By how much did accuracy change?
-- Why does more data usually help?
-
-**Cell 23 — Checkpoint: trainable parameters**
-- Look at the parameter counts printed above. How many parameters are trainable vs frozen?
-- If training time is proportional to trainable parameters, why is transfer learning so fast?
-
-**Cell 28 — Evaluate on benchmark**
-- Write your prediction first: will benchmark accuracy be higher, lower, or the same as validation?
-- Run the cell. Was your prediction right? What might cause a gap between val and benchmark?
-
-**Cell 40 — Sanity check: overfit 10 images**
-- The model trains on only 10 images. What do you expect training accuracy to reach?
-- Why would it be a problem if it *couldn't* overfit 10 images?
-
-**Cell 46 — Reflection on CNN curves**
-- Is training accuracy still rising at the last epoch, or has it flattened?
-- Is there a large gap between train and val accuracy? What does that gap mean?
-- Compare these curves to the pretrained model. Which trained faster?
-
-**Cell 51 — Checkpoint: compare models**
-- Which model has higher benchmark accuracy? By what margin?
-- The pretrained model trained for fewer epochs yet performs better. Why?
-
-**Cell 60 — Final discussion**
-- Do the Grad-CAM heatmaps focus on the face, or somewhere else (hair, background)?
-- If a model makes a confident correct prediction but the heatmap highlights the background, should you trust it?
+Q3. Before training anything: which class do you think will be *harder* to classify, and why?  
+🔍 Find it: just observe — no code needed. Write your gut answer first, then revisit after training.
 
 ---
 
-### 🟡 Intermediate — change one thing, predict the outcome
+**Part 1 · Cell 11 — What is an image?**
 
-For each experiment below: **write your prediction before running**, then check.
+Q4. What is the shape (height × width × channels) of one image?  
+🔍 Find it: run in a new cell:
+```python
+import numpy as np
+from PIL import Image
+img = np.array(Image.open(next(FEMALE_PATH.iterdir())).convert("RGB"))
+print(img.shape)       # (H, W, 3)
+print(img[0, 0, :])    # RGB values of top-left pixel
+```
 
-**Cell 23 — UNFREEZE_LAST_BLOCK**
-- Set `UNFREEZE_LAST_BLOCK = True`, re-run from the control panel. How many new parameters become trainable?
-- Does accuracy change? Does training time change? Why?
+Q5. Which channel image looks brightest in skin regions: Red, Green, or Blue? Does that match your intuition?  
+🔍 Find it: look at the figure produced by cell 11. Skin is warm-toned — which channel shows it lightest?
 
-**Cell 28 — Benchmark vs validation gap**
-- If benchmark accuracy is much lower than validation, what does that tell you about the training set?
-- What would you change first to close that gap?
-
-**Cell 30 — Quick experiments (pick one)**
-1. `EPOCHS_PRETRAINED = 8` — do val curves keep rising, or plateau before epoch 8?
-2. `USE_DATA_AUGMENTATION = True` — does the gap between train and val accuracy shrink? Why would augmentation reduce overfitting?
-3. `FREEZE_BACKBONE = False` — how many more parameters are now trainable? Does the model improve?
-4. `MODEL_NAME = "resnet50"` — is ResNet50 better or worse than MobileNetV2? How long does it take to train?
-
-**Cell 42 — Predict CNN behaviour**
-- Before running: will the handcrafted CNN overfit (train >> val)? Why or why not?
-- Will it beat the pretrained model? If not, why not?
-
-**Cell 43 — CNN experiment zone**
-- Try `DROPOUT_CNN = 0.3`. Does val accuracy increase? Does train accuracy drop?
-- Try `NUM_CHANNELS = 64`. Does accuracy improve? What about training time?
-- Explain why dropout helps generalisation but hurts final training accuracy.
-
-**Cell 53 — Browse predictions**
-- Find one image where the model is highly confident AND correct. What visual feature do you think made it easy?
-- Find one image where the model is highly confident AND wrong. Why might the model have been fooled?
-- Find a prediction close to 0.5 probability. Why is the model uncertain here?
-
-**Cell 55 — Error analysis**
-- Do the misclassified images share any common visual features (pose, lighting, occlusion)?
-- Which model makes more systematic errors — the CNN or the pretrained model?
-
-**Cell 57 — Grad-CAM**
-- Compare the Grad-CAM for the pretrained model vs the handcrafted CNN on the same image. Which focuses more on the face?
-- A heatmap that covers the whole image uniformly suggests the model hasn't learned useful features. Do you see this in either model?
+Q6. All pixel values are between 0 and 255. After normalization (cell 16), what range do you expect them to be in?  
+🔍 Find it: run in a new cell after cell 16:
+```python
+img_tensor, _ = pretrained_train_ds[0]
+print(img_tensor.min().item(), img_tensor.max().item())
+```
 
 ---
 
-### 🔴 Advanced — multi-step experiments, open questions
+**Part 1 · Cell 12 — Data splits**
 
-**Cell 30 — Full fine-tuning**
-- Set `FREEZE_BACKBONE = False` and `LR_PRETRAINED = 1e-5`. Train. Compare to the frozen version.
-- Why use a much lower learning rate when fine-tuning the backbone? What risk does a high LR create?
-- At what point does fine-tuning hurt rather than help?
+Q7. How many images are in the train and validation sets?  
+🔍 Find it: run after cell 17:
+```python
+print("Train images:", len(train_idx))
+print("Val images  :", len(val_idx))
+```
 
-**Cell 46 — CNN architecture search**
-- Try three combinations of (`NUM_CHANNELS`, `DROPOUT_CNN`, `USE_BATCHNORM`). Record benchmark accuracy for each.
-- Which hyperparameter has the largest effect? Can you reach the pretrained model's benchmark accuracy?
-- Why is it hard to beat transfer learning even with a well-tuned handcrafted CNN?
+Q8. Why can't we look at the benchmark results during training to decide when to stop?  
+🔍 Find it: re-read the colored box in cell 12. The answer is in the definition of "Benchmark".
 
-**Cell 62 — TensorBoard hyperparameter sweep**
-- Set `RUN_TUNING = True` and run all three cells. In TensorBoard, which run converges fastest?
-- What does the learning rate vs. final accuracy surface look like? Is there a clear optimum?
+---
 
-**Extra E.3.1 — PCA of patch tokens**
-- The 3-D PCA is mapped to RGB without any label supervision. Yet similar regions get similar colours. What does this tell you about DINOv3's representations?
-- Does PCA separate skin, hair, and background into distinct colours? Is this consistent across images?
+**Part 2 · Cell 18 — What does a batch look like?**
 
-**Extra E.3.2 — UMAP of CLS tokens**
-- Do the two classes separate cleanly in the 2-D UMAP projection? What would a clean separation mean?
-- If the classes overlap, does that mean the model will fail? Or can the MLP still learn to separate them?
+Q9. How many images does the model process in one training step?  
+🔍 Find it: count the images in the grid, or run: `print(BATCH_SIZE)`
 
-**Extra E.3.3 — Self-attention heads**
-- Different heads attend to different regions. Can you identify what each head focuses on (edges, face, background)?
-- One head sometimes attends globally (flat map) and another sharply (one region). Why might a foundation model benefit from diverse attention?
+Q10. The grid shows images already resized to the same dimensions. Why does a neural network require fixed-size inputs?  
+🔍 Find it: look at the `Linear` layer in cell 22 — its input size is fixed. Change `IMG_SIZE_PRETRAINED` and re-run cell 22 to see what changes.
 
-**Extra E.4–E.5 — DINOv3 vs CNN vs Transfer learning**
-- Compare all three approaches on benchmark accuracy. Rank them.
-- DINOv3 MLP trains for 30 epochs on frozen features in seconds, yet beats the handcrafted CNN. What does this tell you about the role of the backbone in performance?
-- What is the practical trade-off between the three approaches (compute, data, interpretability)?
+---
+
+**Part 2 · Cell 23 — Trainable parameters**
+
+Q11. How many parameters does MobileNetV2 have in total? How many are we actually training?  
+🔍 Find it: run after cell 22:
+```python
+total     = sum(p.numel() for p in pretrained_model.parameters())
+trainable = sum(p.numel() for p in pretrained_model.parameters() if p.requires_grad)
+print(f"Total: {total:,}   Trainable: {trainable:,}   Frozen: {total-trainable:,}")
+```
+
+Q12. The model trains in a few minutes despite having millions of parameters. Why?  
+🔍 Find it: compare `trainable` vs `total` from Q11. Gradient computation only runs for `requires_grad=True` parameters.
+
+---
+
+**Part 2 · Cell 28 — Benchmark evaluation**
+
+Q13. Is benchmark accuracy higher or lower than validation accuracy? By how much?  
+🔍 Find it: the two lines printed by cell 29 show both. Or: `print(pretrained_bench_metrics['accuracy'] - pretrained_val_metrics['accuracy'])`
+
+Q14. What does a large gap between val and benchmark accuracy tell you about your model?  
+🔍 Find it: no code — think about which images each set contains and when they were collected.
+
+---
+
+**Part 2 · Cell 20 — How much data do you need?**
+
+Q15. Change `N_IMAGES_PER_CLASS = 50` in the control panel, re-run everything, note benchmark accuracy. Then set it back to `500`. How much did accuracy drop?  
+🔍 Find it: after each run, read the benchmark line printed by cell 29.
+
+---
+
+**Part 3 · Cell 40 — Sanity check**
+
+Q16. After 20 epochs on 10 images, what training accuracy does the tiny model reach?  
+🔍 Find it: look at the rightmost point on the training accuracy curve (cell 41 output). It should approach 100%.
+
+Q17. If the model *couldn't* overfit 10 images, what would that tell you about the architecture?  
+🔍 Find it: no code — a model that can't overfit 10 samples has either wrong dimensions or a bug. Check `HandcraftedCNN` in cell 38.
+
+---
+
+**Part 3 · Cell 46 — Learning curves**
+
+Q18. At the last epoch, is training accuracy still rising or has it plateaued?  
+🔍 Find it: look at the curve from cell 45. Check `cnn_history['train_acc'][-3:]` for the last three values.
+
+Q19. How large is the gap between training and validation accuracy at the end?  
+🔍 Find it: `print(cnn_history['train_acc'][-1] - cnn_history['val_acc'][-1])`
+
+---
+
+**Part 4 · Cell 51 — Compare models**
+
+Q20. Which model has higher benchmark accuracy, and by how much?  
+🔍 Find it: look at the table printed by cell 49, or: `print(comparison_df.to_string())`
+
+Q21. The pretrained model used only 4 epochs. The CNN used 20. Yet the pretrained model wins. Why?  
+🔍 Find it: re-read the backbone explanation in cell 14. Think about what ImageNet pre-training provides.
+
+---
+
+**Part 4 · Cell 60 — Grad-CAM final discussion**
+
+Q22. For each model: is the heatmap centred on the face, or spread over hair/background?  
+🔍 Find it: cell 59 browser. Browse at least 5 images. Note patterns.
+
+Q23. A model makes a confident *correct* prediction, but the heatmap highlights the background. Should you trust this model in production?  
+🔍 Find it: find such a case in the browser. The answer is not in the code — it's in what "correct for the wrong reason" means.
+
+---
+
+### 🟡 Intermediate — change one value, predict, then check
+
+> Rule: **write your prediction before you run**. One sentence is enough.
+
+---
+
+**Part 2 · Cell 23 — Unfreeze last block**
+
+Q24. Predict: if you unfreeze the last conv block of MobileNetV2, how will the number of trainable parameters change?  
+🔍 Do it: in cell 05, set `UNFREEZE_LAST_BLOCK = True`, re-run cell 22, then run Q11's snippet again. How many extra parameters became trainable?
+
+Q25. Does unfreezing the last block improve benchmark accuracy after re-training?  
+🔍 Do it: re-run cells 26–29 with `UNFREEZE_LAST_BLOCK = True`. Compare `pretrained_bench_metrics['accuracy']` to the frozen run.
+
+---
+
+**Part 2 · Cell 30 — Pick one experiment**
+
+Q26. `EPOCHS_PRETRAINED = 8` — predict: will val accuracy keep rising after epoch 4, or plateau?  
+🔍 Do it: change the value in cell 05, re-run cells 26–27. Check the val accuracy curve.
+
+Q27. `USE_DATA_AUGMENTATION = True` — predict: will the gap between train and val accuracy shrink?  
+🔍 Do it: set in cell 05, re-run cells 26–29. Run: `print(pretrained_history['train_acc'][-1] - pretrained_history['val_acc'][-1])` before and after.
+
+Q28. `MODEL_NAME = "resnet50"` — predict: is ResNet50 more accurate or faster than MobileNetV2?  
+🔍 Do it: change in cell 05, re-run. Compare benchmark accuracy and wall-clock time in the tqdm progress bar.
+
+---
+
+**Part 3 · Cell 42 — Predict CNN behaviour before running**
+
+Q29. Before running cells 43–44: predict whether `train_acc` or `val_acc` will be higher at epoch 20. Write it down.  
+🔍 Check: after training, run: `print(f"Train: {cnn_history['train_acc'][-1]:.3f}  Val: {cnn_history['val_acc'][-1]:.3f}")`
+
+Q30. Predict: will the CNN beat the pretrained model on benchmark accuracy?  
+🔍 Check: `print(cnn_bench_m['accuracy'], pretrained_bench_metrics['accuracy'])`
+
+---
+
+**Part 3 · Cell 43 — CNN experiment zone**
+
+Q31. Set `EXP_DROPOUT_CNN = 0.3` in cell 43 and re-run 43–45. Does the train-val gap shrink compared to `0.0`?  
+🔍 Find it: `print(cnn_history['train_acc'][-1] - cnn_history['val_acc'][-1])` — run once with each value and compare.
+
+Q32. Set `EXP_NUM_CHANNELS = 64` and re-run. Does benchmark accuracy improve? By how much does training take longer?  
+🔍 Find it: read the tqdm time estimate and compare `cnn_bench_m['accuracy']`.
+
+Q33. Set `EXP_USE_BATCHNORM = True` and re-run. Do the training curves become smoother?  
+🔍 Find it: compare the loss curves visually. Or: `import numpy as np; print(np.std(cnn_history['val_loss']))`
+
+---
+
+**Part 4 · Cell 53 — Browse predictions**
+
+Q34. Find the prediction with the **highest confidence** in the browser. What is its probability value?  
+🔍 Find it: run in a new cell after 54:
+```python
+max_i = int(np.argmax(cnn_probs.max(axis=1)))
+print(f"Index {max_i}: pred={cnn_class_names[cnn_preds[max_i]]}, conf={cnn_probs[max_i].max():.3f}, true={cnn_class_names[y_bench[max_i]]}")
+```
+
+Q35. Find the **most confident mistake** in the error browser (cell 56 is sorted this way). What confidence does it have?  
+🔍 Find it: the first image shown in the cell 56 browser is the most confident wrong prediction. The confidence is printed in the title.
+
+Q36. Find a prediction close to 0.5 probability. Why is the model uncertain on this image?  
+🔍 Find it:
+```python
+uncertain_i = int(np.argmin(np.abs(cnn_probs.max(axis=1) - 0.5)))
+print(f"Index {uncertain_i}: conf={cnn_probs[uncertain_i].max():.3f}")
+```
+Then navigate to that index in the cell 53/54 browser.
+
+---
+
+**Part 4 · Cell 57 — Grad-CAM**
+
+Q37. For the same image, does the CNN heatmap or the pretrained model heatmap cover a tighter region of the face?  
+🔍 Find it: cell 59 browser. Try at least 3 images. The pretrained model usually shows a more focused heatmap — does yours?
+
+Q38. Find one image where the pretrained model's heatmap looks at something *other than the face* (hair, glasses, background). Does it still predict correctly?  
+🔍 Find it: browse cell 59 and look for heatmaps that are spread outside the face area.
+
+---
+
+### 🔴 Advanced — write code, design experiments, reason from evidence
+
+---
+
+**Part 2 · Cell 30 — Full fine-tuning**
+
+Q39. Set `FREEZE_BACKBONE = False` and `LR_PRETRAINED = 1e-5`. Train. Does benchmark accuracy improve over the frozen baseline?  
+🔍 Do it: change both in cell 05, re-run 26–29. Why use `1e-5` and not the default `1e-4`? What happens if you use `1e-4` instead? Try it.
+
+Q40. Write a snippet to count how many gradient updates the backbone receives per epoch and compare it to the head-only case:
+```python
+backbone_params = sum(p.numel() for name, p in pretrained_model.named_parameters()
+                      if p.requires_grad and 'classifier' not in name)
+head_params     = sum(p.numel() for name, p in pretrained_model.named_parameters()
+                      if p.requires_grad and 'classifier' in name)
+print(f"Backbone trainable: {backbone_params:,}   Head trainable: {head_params:,}")
+```
+What fraction of total parameters are updated during full fine-tuning?
+
+---
+
+**Part 3 · Cell 43 — Architecture search**
+
+Q41. Run three configurations of the CNN and record benchmark accuracy for each. Fill in the table:
+
+| NUM_CHANNELS | DROPOUT_CNN | USE_BATCHNORM | benchmark_acc |
+|---|---|---|---|
+| 32 | 0.0 | False | ? |
+| 32 | 0.3 | True | ? |
+| 64 | 0.3 | True | ? |
+
+🔍 Do it: change values in cell 43, re-run 43–49. Read `cnn_bench_m['accuracy']` each time.  
+Which single change had the largest effect? Can you beat the pretrained model's benchmark accuracy?
+
+Q42. Write a loop that trains the CNN with three different learning rates and prints the final val accuracy for each:
+```python
+for lr in [1e-2, 1e-3, 1e-4]:
+    model = HandcraftedCNN(num_channels=32, dropout_ratio=0.0,
+                           use_batchnorm=True, img_size=IMG_SIZE_PRETRAINED).to(device)
+    opt   = Adam(model.parameters(), lr=lr)
+    loss_fn = nn.CrossEntropyLoss()
+    for _ in range(5):   # quick 5-epoch test
+        train_one_epoch_pretrained(model, pretrained_train_loader, loss_fn, opt)
+    m = evaluate_pretrained(model, pretrained_val_loader, loss_fn)
+    print(f"LR={lr:.0e}  val_acc={m['accuracy']:.3f}")
+```
+Which learning rate works best for 5 epochs? Does the ranking hold at 20 epochs?
+
+---
+
+**Part 4 · Cell 52 — Confusion matrix analysis**
+
+Q43. From the confusion matrices, which class does each model confuse more: female→male or male→female?  
+🔍 Find it:
+```python
+from sklearn.metrics import confusion_matrix
+cm_pretrained = confusion_matrix(pretrained_bench_metrics['labels'], pretrained_bench_metrics['preds'])
+cm_cnn        = confusion_matrix(cnn_bench_m['y_true'], cnn_bench_m['y_pred'])
+print("Pretrained FP/FN:", cm_pretrained[0,1], "/", cm_pretrained[1,0])
+print("CNN        FP/FN:", cm_cnn[0,1],        "/", cm_cnn[1,0])
+```
+Which direction of error is more common for each model? Do they make the same types of mistakes?
+
+---
+
+**Part 5 · Cell 62 — TensorBoard sweep**
+
+Q44. Set `RUN_TUNING = True` and run cells 63–64. After TensorBoard opens, which learning rate reaches the best val accuracy in the fewest epochs?  
+🔍 Find it: TensorBoard → Scalars tab → group by `lr`. The run name encodes the hyperparameters.
+
+Q45. What is the best `(lr, batch_size)` combination from the sweep? Does a larger batch size always help?  
+🔍 Find it: read the final val accuracy from the TensorBoard table. Think about the trade-off between gradient noise (small batch) and compute efficiency (large batch).
+
+---
+
+**Extra · E.3.1 — PCA of patch tokens**
+
+Q46. The 3-D PCA is mapped to R, G, B with no class labels used. Yet hair, skin, and background appear in different colours. What does this mean about what DINOv3 has learned?  
+🔍 Find it: run cell 77 on several images. Check whether the colour assignment is consistent across different people.
+
+Q47. Run PCA with 2 components instead of 3 and plot as a scatter coloured by class:
+```python
+from sklearn.decomposition import PCA
+pca2 = PCA(n_components=2).fit(patches_train.reshape(-1, 384))
+proj = pca2.transform(cls_train)   # project CLS tokens instead
+plt.scatter(proj[:,0], proj[:,1], c=y_train, cmap='bwr', alpha=0.5, s=10)
+plt.title("CLS tokens — PCA(2)"); plt.colorbar(); plt.show()
+```
+How much variance do the first 2 components explain? Does the scatter show class separation?
+
+---
+
+**Extra · E.3.2 — UMAP of CLS tokens**
+
+Q48. Do the two classes form distinct clusters in the UMAP plot, or do they overlap?  
+🔍 Find it: cell 79 output. Look for clear boundaries between colours.
+
+Q49. If the UMAP shows clean separation, can you predict DINOv3 MLP benchmark accuracy before running E.4–E.5? Make the prediction, then check.  
+🔍 Check: `print(dino_bench_metrics['accuracy'])` after cell 89.
+
+---
+
+**Extra · E.5 — Three-way benchmark comparison**
+
+Q50. Rank all three approaches (handcrafted CNN, transfer learning, DINOv3 MLP) by benchmark accuracy and training time. Fill in:
+
+| Approach | Benchmark acc | Training time | Backbone params trained |
+|---|---|---|---|
+| Handcrafted CNN | ? | ? | 0 (trained from scratch) |
+| Transfer learning (MobileNetV2) | ? | ? | 0 (frozen) or all |
+| DINOv3 MLP | ? | ? | 0 (frozen) |
+
+🔍 Find it: cell 89 prints all three. Training time: check tqdm output for each section.  
+Why does DINOv3 win despite training only 2 linear layers? What does that tell you about the value of pre-training at scale?
 
 ---
 

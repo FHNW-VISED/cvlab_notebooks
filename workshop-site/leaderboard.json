@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "competition": "cvlab-face-classification-2026",
+  "top_n_per_person": 3,
+  "benchmark_sha256": "e7414cb0cdb81b32880b34e7d26f29e0c7f76835353fdd530fffef3f3fd83489",
+  "updated_at": "2026-04-27T00:00:00Z",
+  "entries": []
+}
