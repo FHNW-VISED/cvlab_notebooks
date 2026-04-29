@@ -18,13 +18,13 @@
 | 06 | Markdown | Part 1 intro | Task framing — binary face classification |
 | 07 | Code | 1. Data | Clone dataset; define FACES_PATH, FEMALE_PATH, MALE_PATH, BENCHMARK_PATH |
 | 08 | Markdown | 1. Browse | 🟢 "Your first look" prompt |
-| 09 | Code | 1. Browse | `scroll_face_images()` interactive widget + static fallback |
+| 09 | Code | 1. Browse | `scroll_face_images()` interactive widget + static fallback — **collapsed** |
 | 10 | Markdown | 1. Channels | 🟢 "What is an image?" explanation |
 | 11 | Code | 1. Channels | `show_image_channels()` — RGB channel decomposition figure |
 | 12 | Markdown | 1. Splits | 🟢 Train/Val/Benchmark explanation with colored div + image |
 | 13 | Markdown | Part 2 intro | Transfer learning intro |
 | 14 | Markdown | 2. Backbone | 🟢 Backbone/head explanation with styled div + image |
-| 15 | Markdown | 2. Transforms | Normalization explanation |
+| 15 | Markdown | 2. Transforms | Normalization explanation + 🟡 Q6 (intermediate, not beginner) |
 | 16 | Code | 2. Transforms | imagenet_mean/std, display/train/eval transforms, ImageFolder datasets |
 | 17 | Code | 2. Split | Person-aware train/val split for pretrained model; optional N_IMAGES_PER_CLASS subsample |
 | 18 | Markdown | 2. Batch viz | 🟢 Batch size explanation + batch image |
@@ -166,7 +166,7 @@
 **Part 1 · Cell 09 — First look at the data**
 
 Q1. Do both classes have the same number of images in the widget?  
-🔍 Find it: scroll the widget — notice the label shown. Or run: `print(Counter(labels))` right after cell 09 executes (Counter is already imported).
+🔍 Find it: scroll the widget — notice the label shown. Or paste into a new cell and run: `print(Counter(p.parent.name for p in FACES_PATH.rglob("*.jpg")))` (Counter is already imported).
 
 Q2. Can you spot an image that looks noisy, blurry, or oddly framed?  
 🔍 Find it: scroll slowly through both classes. Write down the index of one unusual image. What might cause it?
@@ -191,11 +191,15 @@ print(img[0, 0, :])    # RGB values of top-left pixel
 Q5. Which channel image looks brightest in skin regions: Red, Green, or Blue? Does that match your intuition?  
 🔍 Find it: look at the figure produced by cell 11. Skin is warm-toned — which channel shows it lightest?
 
-Q6. All pixel values are between 0 and 255. After normalization (cell 16), what range do you expect them to be in?  
-🔍 Find it: run in a new cell after cell 16:
+---
+
+**Part 2 · Cell 15 — Data loading (normalization)**
+
+Q6 🟡 (Intermediate). After normalization, pixel values are no longer in the 0–255 range. What range do you expect?  
+🔍 Find it: paste into a new cell after cell 16 runs:
 ```python
 img_tensor, _ = pretrained_train_ds[0]
-print(img_tensor.min().item(), img_tensor.max().item())
+print(f"min={img_tensor.min():.2f}  max={img_tensor.max():.2f}")
 ```
 
 ---
@@ -219,7 +223,7 @@ Q8. Why can't we look at the benchmark results during training to decide when to
 Q9. How many images does the model process in one training step?  
 🔍 Find it: count the images in the grid, or run: `print(BATCH_SIZE)`
 
-Q10. The grid shows images already resized to the same dimensions. Why does a neural network require fixed-size inputs?  
+Q10 🟡 (Intermediate). The grid shows images already resized to the same dimensions. Why does a neural network require fixed-size inputs?  
 🔍 Find it: look at the `Linear` layer in cell 22 — its input size is fixed. Change `IMG_SIZE_PRETRAINED` and re-run cell 22 to see what changes.
 
 ---
@@ -281,8 +285,8 @@ Q19. How large is the gap between training and validation accuracy at the end?
 Q20. Which model has higher benchmark accuracy, and by how much?  
 🔍 Find it: look at the table printed by cell 49, or: `print(comparison_df.to_string())`
 
-Q21. The pretrained model used only 4 epochs. The CNN used 20. Yet the pretrained model wins. Why?  
-🔍 Find it: re-read the backbone explanation in cell 14. Think about what ImageNet pre-training provides.
+Q21. Compare the two models: which one achieves higher benchmark accuracy? Does more training time necessarily mean better accuracy? Why or why not?  
+🔍 Find it: re-read the backbone explanation in cell 14. Think about what ImageNet pre-training provides versus training from scratch.
 
 ---
 
@@ -351,7 +355,7 @@ Q33. Set `EXP_USE_BATCHNORM = True` and re-run. Do the training curves become sm
 **Part 4 · Cell 53 — Browse predictions**
 
 Q34. Find the prediction with the **highest confidence** in the browser. What is its probability value?  
-🔍 Find it: run in a new cell after 54:
+🔍 Find it: paste into a new cell after 54:
 ```python
 max_i = int(np.argmax(cnn_probs.max(axis=1)))
 print(f"Index {max_i}: pred={cnn_class_names[cnn_preds[max_i]]}, conf={cnn_probs[max_i].max():.3f}, true={cnn_class_names[y_bench[max_i]]}")
@@ -370,12 +374,30 @@ Then navigate to that index in the cell 53/54 browser.
 
 ---
 
+**Part 4 · Cell 55 — Error analysis**
+
+Q37. How many images were misclassified in total?  
+🔍 Find it: the print at the top of the error browser shows the count.
+
+Q38. Do the misclassified images share a pattern (pose, lighting, accessories, occlusion)?  
+🔍 Find it: browse the first 10 mistakes. Write down one common feature you notice.
+
+Q39. Which class does the CNN confuse more — female→male or male→female?  
+🔍 Find it: paste into a new cell after the confusion matrix code:
+```python
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(cnn_bench_m['labels'], cnn_bench_m['preds'])
+print(f"female→male errors: {cm[0,1]}   male→female errors: {cm[1,0]}")
+```
+
+---
+
 **Part 4 · Cell 57 — Grad-CAM**
 
-Q37. For the same image, does the CNN heatmap or the pretrained model heatmap cover a tighter region of the face?  
+Q40. For the same image, does the CNN heatmap or the pretrained model heatmap cover a tighter region of the face?  
 🔍 Find it: cell 59 browser. Try at least 3 images. The pretrained model usually shows a more focused heatmap — does yours?
 
-Q38. Find one image where the pretrained model's heatmap looks at something *other than the face* (hair, glasses, background). Does it still predict correctly?  
+Q41. Find one image where the pretrained model focuses on something *other than the face* (hair, glasses, background). Does it still predict correctly?  
 🔍 Find it: browse cell 59 and look for heatmaps that are spread outside the face area.
 
 ---
@@ -386,10 +408,10 @@ Q38. Find one image where the pretrained model's heatmap looks at something *oth
 
 **Part 2 · Cell 30 — Full fine-tuning**
 
-Q39. Set `FREEZE_BACKBONE = False` and `LR_PRETRAINED = 1e-5`. Train. Does benchmark accuracy improve over the frozen baseline?  
+Q42. Set `FREEZE_BACKBONE = False` and `LR_PRETRAINED = 1e-5`. Train. Does benchmark accuracy improve over the frozen baseline?  
 🔍 Do it: change both in cell 05, re-run 26–29. Why use `1e-5` and not the default `1e-4`? What happens if you use `1e-4` instead? Try it.
 
-Q40. Write a snippet to count how many gradient updates the backbone receives per epoch and compare it to the head-only case:
+Q43. Write a snippet to count how many gradient updates the backbone receives per epoch and compare it to the head-only case:
 ```python
 backbone_params = sum(p.numel() for name, p in pretrained_model.named_parameters()
                       if p.requires_grad and 'classifier' not in name)
@@ -403,7 +425,7 @@ What fraction of total parameters are updated during full fine-tuning?
 
 **Part 3 · Cell 43 — Architecture search**
 
-Q41. Run three configurations of the CNN and record benchmark accuracy for each. Fill in the table:
+Q44. Run three configurations of the CNN and record benchmark accuracy for each. Fill in the table:
 
 | NUM_CHANNELS | DROPOUT_CNN | USE_BATCHNORM | benchmark_acc |
 |---|---|---|---|
@@ -414,7 +436,7 @@ Q41. Run three configurations of the CNN and record benchmark accuracy for each.
 🔍 Do it: change values in cell 43, re-run 43–49. Read `cnn_bench_m['accuracy']` each time.  
 Which single change had the largest effect? Can you beat the pretrained model's benchmark accuracy?
 
-Q42. Write a loop that trains the CNN with three different learning rates and prints the final val accuracy for each:
+Q45. Write a loop that trains the CNN with three different learning rates and prints the final val accuracy for each:
 ```python
 for lr in [1e-2, 1e-3, 1e-4]:
     model = HandcraftedCNN(num_channels=32, dropout_ratio=0.0,
@@ -432,7 +454,7 @@ Which learning rate works best for 5 epochs? Does the ranking hold at 20 epochs?
 
 **Part 4 · Cell 52 — Confusion matrix analysis**
 
-Q43. From the confusion matrices, which class does each model confuse more: female→male or male→female?  
+Q46. From the confusion matrices, which class does each model confuse more: female→male or male→female?  
 🔍 Find it:
 ```python
 from sklearn.metrics import confusion_matrix
@@ -447,20 +469,20 @@ Which direction of error is more common for each model? Do they make the same ty
 
 **Part 5 · Cell 62 — TensorBoard sweep**
 
-Q44. Set `RUN_TUNING = True` and run cells 63–64. After TensorBoard opens, which learning rate reaches the best val accuracy in the fewest epochs?  
+Q47. Set `RUN_TUNING = True` and run cells 63–64. After TensorBoard opens, which learning rate reaches the best val accuracy in the fewest epochs?  
 🔍 Find it: TensorBoard → Scalars tab → group by `lr`. The run name encodes the hyperparameters.
 
-Q45. What is the best `(lr, batch_size)` combination from the sweep? Does a larger batch size always help?  
+Q48. What is the best `(lr, batch_size)` combination from the sweep? Does a larger batch size always help?  
 🔍 Find it: read the final val accuracy from the TensorBoard table. Think about the trade-off between gradient noise (small batch) and compute efficiency (large batch).
 
 ---
 
 **Extra · E.3.1 — PCA of patch tokens**
 
-Q46. The 3-D PCA is mapped to R, G, B with no class labels used. Yet hair, skin, and background appear in different colours. What does this mean about what DINOv3 has learned?  
+Q49. The 3-D PCA is mapped to R, G, B with no class labels used. Yet hair, skin, and background appear in different colours. What does this mean about what DINOv3 has learned?  
 🔍 Find it: run cell 77 on several images. Check whether the colour assignment is consistent across different people.
 
-Q47. Run PCA with 2 components instead of 3 and plot as a scatter coloured by class:
+Q50. Run PCA with 2 components instead of 3 and plot as a scatter coloured by class:
 ```python
 from sklearn.decomposition import PCA
 pca2 = PCA(n_components=2).fit(patches_train.reshape(-1, 384))
@@ -474,17 +496,17 @@ How much variance do the first 2 components explain? Does the scatter show class
 
 **Extra · E.3.2 — UMAP of CLS tokens**
 
-Q48. Do the two classes form distinct clusters in the UMAP plot, or do they overlap?  
+Q51. Do the two classes form distinct clusters in the UMAP plot, or do they overlap?  
 🔍 Find it: cell 79 output. Look for clear boundaries between colours.
 
-Q49. If the UMAP shows clean separation, can you predict DINOv3 MLP benchmark accuracy before running E.4–E.5? Make the prediction, then check.  
+Q52. If the UMAP shows clean separation, can you predict DINOv3 MLP benchmark accuracy before running E.4–E.5? Make the prediction, then check.  
 🔍 Check: `print(dino_bench_metrics['accuracy'])` after cell 89.
 
 ---
 
 **Extra · E.5 — Three-way benchmark comparison**
 
-Q50. Rank all three approaches (handcrafted CNN, transfer learning, DINOv3 MLP) by benchmark accuracy and training time. Fill in:
+Q53. Rank all three approaches (handcrafted CNN, transfer learning, DINOv3 MLP) by benchmark accuracy and training time. Fill in:
 
 | Approach | Benchmark acc | Training time | Backbone params trained |
 |---|---|---|---|
