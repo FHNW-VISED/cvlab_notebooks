@@ -46,7 +46,7 @@
 | 34 | Markdown | 3. Visualisers | 🔗 CNN Playground / CNN Explainer / 3D Neural Network Vis links |
 | 35 | Markdown | 3. Preprocess | OpenCV preprocessing explanation |
 | 36 | Code | 3. Preprocess | `cnn_class_names` alias; loads pretrained datasets |
-| 37 | Markdown | 3. Architecture | Architecture header |
+| 37 | Markdown | 3. Architecture | Architecture explanation: Conv, BN, ReLU, Pooling, Flatten+Linear; ASCII flow diagram |
 | 38 | Code | 3. Architecture | `ConvModule`, `HandcraftedCNN` (3 conv blocks + classifier head) |
 | 39 | Markdown | 3. Arch diagram | 🟢 Spatial diagram explanation |
 | 40 | Markdown | 3. Overfit | 🟢 Overfit sanity check explanation |
